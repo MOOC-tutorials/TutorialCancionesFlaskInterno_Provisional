@@ -1,12 +1,16 @@
-from modelos.modelos import db, Usuario, Album, Medio, Cancion, albumes_canciones, CancionSchema, AlbumSchema, UsuarioSchema
+from modelos.modelos import db
 from flask import Flask
+from flask_restful import Api
+from vistas.vistas import *
 
 app = Flask(__name__)
 db.init_app(app)
+api = Api(app)
 
-cancion_schema = CancionSchema()
-album_schema = AlbumSchema()
-usuario_schema = UsuarioSchema()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
-with app.app_context():
-    db.create_all()
+api.add_resource(VistaAlbums, '/albumes')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
