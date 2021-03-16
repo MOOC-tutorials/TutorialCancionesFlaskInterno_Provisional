@@ -49,5 +49,14 @@ class test_cancion(unittest.TestCase):
             self.assertEqual(cancion["segundos"], 30)
             self.assertEqual(cancion["interprete"], 'músico 1')
 
-
+    def test_editar_cancion(self):
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba1', minutos='3', segundos='30', interprete="músico 1")), content_type='application/json')
+        self.client.put('/cancion/1', data=json.dumps(dict(titulo='prueba modificada', minutos='1', segundos='50', interprete="músico 2")), content_type='application/json')
+        res = self.client.get('/cancion/1')
+        cancion = json.loads(res.data)
+        with self.app.app_context():
+            self.assertEqual(cancion["titulo"], 'prueba modificada')
+            self.assertEqual(cancion["minutos"], 1)
+            self.assertEqual(cancion["segundos"], 50)
+            self.assertEqual(cancion["interprete"], 'músico 2')
     
