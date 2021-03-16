@@ -19,3 +19,13 @@ class VistaAlbum(Resource):
 
     def get(self, id_album):
         return album_schema.dump(Album.query.get_or_404(id_album))
+
+    def put(self, id_album):
+        album = Album.query.get_or_404(id_album)
+        album.titulo = request.json.get("titulo",album.titulo)
+        album.anio = request.json.get("anio", album.anio)
+        album.descripcion = request.json.get("descripcion", album.descripcion)
+        album.medio = request.json.get("medio", album.medio)
+        db.session.commit()
+        return album_schema.dump(album)
+

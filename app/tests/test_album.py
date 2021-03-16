@@ -54,7 +54,17 @@ class test_album(unittest.TestCase):
             self.assertEqual(album["descripcion"], 'na')
             self.assertEqual(album["medio"]['llave'], 'CD')
 
-        
+    def test_editar_album(self):
+        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        self.client.put('/album/1', data=json.dumps(dict(titulo='prueba2', anio='2000', descripcion='blablabla', medio='CASETE')), content_type='application/json')
+        res = self.client.get('/album/1')
+        album = json.loads(res.data)
+        with self.app.app_context():
+            self.assertEqual(album["titulo"], 'prueba2')
+            self.assertEqual(album["anio"], 2000)
+            self.assertEqual(album["descripcion"], 'blablabla')
+            self.assertEqual(album["medio"]['llave'], 'CASETE')
+
 
 
     
