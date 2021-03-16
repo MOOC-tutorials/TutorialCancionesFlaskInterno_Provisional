@@ -72,3 +72,9 @@ class VistaCanciones(Resource):
 
     def get(self):
         return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+
+class VistaCancion(Resource):
+
+    def get(self, id_cancion):
+        return cancion_schema.dump(Cancion.query.get_or_404(id_cancion))
+
