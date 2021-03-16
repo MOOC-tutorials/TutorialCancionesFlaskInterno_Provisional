@@ -11,3 +11,6 @@ class VistaAlbums(Resource):
         db.session.add(nuevo_album)
         db.session.commit()
         return album_schema.dump(nuevo_album)
+
+    def get(self):
+        return [album_schema.dump(al) for al in Album.query.all()]
