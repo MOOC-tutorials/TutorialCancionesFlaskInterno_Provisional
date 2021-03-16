@@ -1,9 +1,10 @@
 from flask import request
-from modelos.modelos import db, Album, Medio, AlbumSchema, Usuario, UsuarioSchema
+from modelos.modelos import db, Album, Medio, AlbumSchema, Usuario, UsuarioSchema, Cancion, CancionSchema
 from flask_restful import Resource
 
 album_schema = AlbumSchema()
 usuario_schema = UsuarioSchema()
+cancion_schema = CancionSchema()
 
 class VistaAlbums(Resource):
 
@@ -60,3 +61,11 @@ class VistaUsuario(Resource):
         usuario.contrasena = request.json.get("contrasena",usuario.contrasena)
         db.session.commit()
         return usuario_schema.dump(usuario)
+
+class VistaCanciones(Resource):
+
+    def post(self):
+        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
+        db.session.add(nueva_cancion)
+        db.session.commit()
+        return cancion_schema.dump(nueva_cancion)
