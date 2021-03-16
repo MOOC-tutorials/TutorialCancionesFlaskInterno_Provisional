@@ -65,6 +65,16 @@ class test_album(unittest.TestCase):
             self.assertEqual(album["descripcion"], 'blablabla')
             self.assertEqual(album["medio"]['llave'], 'CASETE')
 
+    def test_eliminar_album(self):
+        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        self.client.delete('/album/1')
+        res = self.client.get('/album/1')
+        with self.app.app_context():
+            self.assertEqual(res.status_code, 404)
+            
+
+
+
 
 
     

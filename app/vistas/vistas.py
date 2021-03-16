@@ -29,3 +29,8 @@ class VistaAlbum(Resource):
         db.session.commit()
         return album_schema.dump(album)
 
+    def delete(self, id_album):
+        album = Album.query.get_or_404(id_album)
+        db.session.delete(album)
+        db.session.commit()
+        return '',204
