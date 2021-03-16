@@ -1,8 +1,9 @@
 from flask import request
-from modelos.modelos import db, Album, Medio, AlbumSchema
+from modelos.modelos import db, Album, Medio, AlbumSchema, Usuario, UsuarioSchema
 from flask_restful import Resource
 
 album_schema = AlbumSchema()
+usuario_schema = UsuarioSchema()
 
 class VistaAlbums(Resource):
 
@@ -34,3 +35,12 @@ class VistaAlbum(Resource):
         db.session.delete(album)
         db.session.commit()
         return '',204
+
+
+class VistaLogin(Resource):
+
+    def post(self):
+        nuevo_usuario = Usuario(nombre=request.json["nombre"], contrasena=request.json["contrasena"])
+        db.session.add(nuevo_usuario)
+        db.session.commit()
+ 

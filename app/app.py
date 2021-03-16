@@ -11,6 +11,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 
 api.add_resource(VistaAlbums, '/albumes')
 api.add_resource(VistaAlbum, '/album/<int:id_album>')
+api.add_resource(VistaLogin, '/login')
 
 with app.app_context():
     db.create_all()
