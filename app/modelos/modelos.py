@@ -32,7 +32,7 @@ class Album(db.Model):
     canciones = db.relationship('Cancion', secondary = 'album_cancion')
 
 class Usuario(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     nombre = db.Column(db.String(50))
     contrasena = db.Column(db.String(50))
     albumes = db.relationship('Album', cascade='all, delete, delete-orphan')

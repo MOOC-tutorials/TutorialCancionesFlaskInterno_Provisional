@@ -42,3 +42,13 @@ class test_usuario(unittest.TestCase):
         res = self.client.get('/usuario/1')
         with self.app.app_context():
             self.assertEqual(res.status_code, 404)
+
+    def test_editar_usuario(self):
+        self.client.post('/login', data=json.dumps(dict(nombre='user', contrasena='12345')), content_type='application/json')
+        self.client.put('/usuario/1', data=json.dumps(dict(nombre='user1234', contrasena='54321')), content_type='application/json')
+        res = self.client.get('/usuario/1')
+        usuario = json.loads(res.data)
+        with self.app.app_context():
+            self.assertEqual(usuario["nombre"], 'user')
+            self.assertEqual(usuario["contrasena"], '54321')
+
