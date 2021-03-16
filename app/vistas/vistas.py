@@ -86,3 +86,9 @@ class VistaCancion(Resource):
         cancion.interprete = request.json.get("interprete",cancion.interprete)
         db.session.commit()
         return cancion_schema.dump(cancion)
+
+    def delete(self, id_cancion):
+        cancion = Cancion.query.get_or_404(id_cancion)
+        db.session.delete(cancion)
+        db.session.commit()
+        return '',204

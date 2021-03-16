@@ -59,4 +59,11 @@ class test_cancion(unittest.TestCase):
             self.assertEqual(cancion["minutos"], 1)
             self.assertEqual(cancion["segundos"], 50)
             self.assertEqual(cancion["interprete"], 'músico 2')
+            
+    def test_eliminar_cancion(self):
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba1', minutos='3', segundos='30', interprete="músico 1")), content_type='application/json')
+        self.client.delete('/cancion/1')
+        res = self.client.get('/cancion/1')
+        with self.app.app_context():
+            self.assertEqual(res.status_code, 404)
     
