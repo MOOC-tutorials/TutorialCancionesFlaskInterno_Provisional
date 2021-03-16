@@ -30,3 +30,11 @@ class test_cancion(unittest.TestCase):
             self.assertEqual(len(Cancion.query.all()), 1)
             cancion_agregada = Cancion.query.filter(Cancion.titulo == "prueba").first()
             self.assertIsNotNone(cancion_agregada)
+
+    def test_ver_canciones(self):
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba1', minutos='3', segundos='30', interprete="músico 1")), content_type='application/json')
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba2',  minutos='3', segundos='30', interprete="músico 2")), content_type='application/json')
+        res = self.client.get('/canciones')
+
+        with self.app.app_context():
+            self.assertEqual(len(json.loads(res.data)), 2)
