@@ -24,7 +24,21 @@ class test_usuario(unittest.TestCase):
             db.drop_all()
 
     def test_crear_usuario(self):
-        res = self.client.post('/login', data=json.dumps(dict(nombre='user', contrasena='12345')), content_type='application/json')
+        self.client.post('/login', data=json.dumps(dict(nombre='user', contrasena='12345')), content_type='application/json')
         with app.app_context():
             self.assertEqual(len(Usuario.query.all()),1)
 
+    def test_ver_usuario(self):
+        self.client.post('/login', data=json.dumps(dict(nombre='user', contrasena='12345')), content_type='application/json')
+        res = self.client.get('/usuario/1')
+        album = json.loads(res.data)
+        with self.app.app_context():
+            self.assertEqual(album["nombre"], 'user')
+            self.assertEqual(album["contrasena"], '12345')
+
+    def test_eliminar_usuario(self):
+        self.client.post('/login', data=json.dumps(dict(nombre='user', contrasena='12345')), content_type='application/json')
+        self.client.delete('/usuario/1')
+        res = self.client.get('/usuario/1')
+        with self.app.app_context():
+            self.assertEqual(res.status_code, 404)
