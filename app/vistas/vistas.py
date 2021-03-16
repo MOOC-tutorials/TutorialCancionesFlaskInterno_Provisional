@@ -14,3 +14,8 @@ class VistaAlbums(Resource):
 
     def get(self):
         return [album_schema.dump(al) for al in Album.query.all()]
+
+class VistaAlbum(Resource):
+
+    def get(self, id_album):
+        return album_schema.dump(Album.query.get_or_404(id_album))

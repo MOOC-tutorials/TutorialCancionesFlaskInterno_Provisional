@@ -39,5 +39,22 @@ class test_album(unittest.TestCase):
         with self.app.app_context():
             self.assertEqual(len(json.loads(res.data)), 2)
 
+    def test_ver_album_no_existente(self):
+        res = self.client.get('/album/1')
+        with self.app.app_context():
+            self.assertEqual(res.status_code, 404)
+
+    def test_ver_album_no_existente(self):
+        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        res = self.client.get('/album/1')
+        album = json.loads(res.data)
+        with self.app.app_context():
+            self.assertEqual(album["titulo"], 'prueba')
+            self.assertEqual(album["anio"], 1999)
+            self.assertEqual(album["descripcion"], 'na')
+            self.assertEqual(album["medio"]['llave'], 'CD')
+
+        
+
 
     
