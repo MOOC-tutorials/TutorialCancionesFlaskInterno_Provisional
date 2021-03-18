@@ -74,7 +74,11 @@ class VistaCanciones(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('nombre', location='args')
         args = parser.parse_args()
-        return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+        if args["nombre"] is None or args["nombre"] == "":
+            return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+        else:
+            return [cancion_schema.dump(ca) for ca in Cancion.query.filter(
+                Cancion.titulo == args["nombre"])]
         
 
 class VistaCancion(Resource):
