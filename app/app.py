@@ -16,6 +16,7 @@ api.add_resource(VistaUsuario, '/usuario/<int:id_usuario>')
 api.add_resource(VistaCanciones, '/canciones')
 api.add_resource(VistaCancion, '/cancion/<int:id_cancion>')
 
+
 with app.app_context():
     db.create_all()
 

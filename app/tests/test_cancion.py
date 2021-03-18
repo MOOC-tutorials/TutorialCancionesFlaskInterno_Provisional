@@ -67,3 +67,10 @@ class test_cancion(unittest.TestCase):
         with self.app.app_context():
             self.assertEqual(res.status_code, 404)
     
+    def test_buscar_cancion_sin_parametros(self):
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba1', minutos='3', segundos='30', interprete="músico 1")), content_type='application/json')
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba2',  minutos='3', segundos='30', interprete="músico 2")), content_type='application/json')
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba3',  minutos='3', segundos='30', interprete="músico 3")), content_type='application/json')
+        res = self.client.get('/canciones?nombre')
+        with self.app.app_context():
+            self.assertEqual(len(json.loads(res.data)), 3)

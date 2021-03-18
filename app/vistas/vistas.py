@@ -1,6 +1,6 @@
 from flask import request
 from modelos.modelos import db, Album, Medio, AlbumSchema, Usuario, UsuarioSchema, Cancion, CancionSchema
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 
 album_schema = AlbumSchema()
 usuario_schema = UsuarioSchema()
@@ -92,3 +92,4 @@ class VistaCancion(Resource):
         db.session.delete(cancion)
         db.session.commit()
         return '',204
+
