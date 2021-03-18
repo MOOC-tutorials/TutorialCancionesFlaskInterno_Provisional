@@ -71,7 +71,11 @@ class VistaCanciones(Resource):
         return cancion_schema.dump(nueva_cancion)
 
     def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('nombre', location='args')
+        args = parser.parse_args()
         return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+        
 
 class VistaCancion(Resource):
 
