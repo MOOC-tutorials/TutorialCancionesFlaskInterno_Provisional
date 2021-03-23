@@ -78,7 +78,7 @@ class VistaCanciones(Resource):
             return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
         else:
             return [cancion_schema.dump(ca) for ca in Cancion.query.filter(
-                Cancion.titulo == args["nombre"])]
+                Cancion.titulo.ilike('%{0}%'.format(args["nombre"])))]
         
 
 class VistaCancion(Resource):
