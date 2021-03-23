@@ -87,3 +87,18 @@ class test_cancion(unittest.TestCase):
             self.assertEqual(canciones[0]["minutos"],1)
             self.assertEqual(canciones[0]["segundos"],20)
             self.assertEqual(canciones[0]["interprete"],"músico 1")
+
+    def test_buscar_cancion_coincidencia_parcial(self):
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba1', minutos='1', segundos='20', interprete="músico 1")), content_type='application/json')
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba2',  minutos='2', segundos='30', interprete="músico 2")), content_type='application/json')
+        self.client.post('/canciones', data=json.dumps(dict(titulo='prueba3',  minutos='3', segundos='40', interprete="músico 3")), content_type='application/json')
+        res_1 = self.client.get('/canciones?nombre=prueba')
+        res_2 = self.client.get('/canciones?nombre=2')
+        with self.app.app_context():
+            canciones_1 = json.loads(res_1.data)
+            self.assertEqual(len(canciones_1), 3)
+            self.assertEqual(canciones_1[0]["titulo"],"prueba1")
+            self.assertEqual(canciones_1[1]["titulo"],"prueba2")
+            self.assertEqual(canciones_1[2]["titulo"],"prueba3")
+            canciones_2 = json.loads(res_2.data)
+            self.assertEqual(canciones_2[0]["titulo"],"prueba2")
