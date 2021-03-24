@@ -1,6 +1,6 @@
 from flask import request
 from modelos.modelos import db, Album, Medio, AlbumSchema, Usuario, UsuarioSchema, Cancion, CancionSchema
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 
 album_schema = AlbumSchema()
 usuario_schema = UsuarioSchema()
@@ -71,7 +71,15 @@ class VistaCanciones(Resource):
         return cancion_schema.dump(nueva_cancion)
 
     def get(self):
-        return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+        parser = reqparse.RequestParser()
+        parser.add_argument('nombre', location='args')
+        args = parser.parse_args()
+        if args["nombre"] is None or args["nombre"] == "":
+            return [cancion_schema.dump(ca) for ca in Cancion.query.all()]
+        else:
+            return [cancion_schema.dump(ca) for ca in Cancion.query.filter(
+                Cancion.titulo.ilike('%{0}%'.format(args["nombre"])))]
+        
 
 class VistaCancion(Resource):
 
@@ -92,3 +100,4 @@ class VistaCancion(Resource):
         db.session.delete(cancion)
         db.session.commit()
         return '',204
+
