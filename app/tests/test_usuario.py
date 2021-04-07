@@ -52,3 +52,11 @@ class test_usuario(unittest.TestCase):
             self.assertEqual(usuario["nombre"], 'user')
             self.assertEqual(usuario["contrasena"], '54321')
 
+    def test_crear_album_a_usuario(self):
+        self.client.post('/login', data=json.dumps(dict(nombre='user', contrasena='12345')), content_type='application/json')
+        res = self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+       
+        with self.app.app_context():
+            self.assertEqual(len(Album.query.all()), 1)
+            album_agregado = Album.query.filter(Album.titulo == "prueba").first()
+            self.assertIsNotNone(album_agregado)
