@@ -33,8 +33,8 @@ class test_album(unittest.TestCase):
             self.assertIsNotNone(album_agregado)
             
     def test_ver_albumes(self):
-        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
-        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CASETE')), content_type='application/json')
+        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba1', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba2', anio='1999', descripcion='na', medio='CASETE')), content_type='application/json')
         res = self.client.get('/usuario/1/albumes')
 
         with self.app.app_context():
