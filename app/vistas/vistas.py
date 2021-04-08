@@ -1,6 +1,7 @@
 from flask import request
 from modelos.modelos import db, Album, Medio, AlbumSchema, Usuario, UsuarioSchema, Cancion, CancionSchema
 from flask_restful import Resource, reqparse
+from sqlalchemy.exc import IntegrityError
 
 album_schema = AlbumSchema()
 usuario_schema = UsuarioSchema()
@@ -8,14 +9,22 @@ cancion_schema = CancionSchema()
 
 class VistaAlbums(Resource):
 
-    def post(self):
+    def post(self, id_usuario):
         nuevo_album = Album(titulo=request.json["titulo"], anio=request.json["anio"], descripcion=request.json["descripcion"], medio=request.json["medio"])
-        db.session.add(nuevo_album)
-        db.session.commit()
+        usuario = Usuario.query.get_or_404(id_usuario)
+        usuario.albumes.append(nuevo_album)
+        
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return 'El usuario ya tiene un album con dicho nombre',409
+        
         return album_schema.dump(nuevo_album)
 
-    def get(self):
-        return [album_schema.dump(al) for al in Album.query.all()]
+    def get(self, id_usuario):
+        usuario = Usuario.query.get_or_404(id_usuario)
+        return [album_schema.dump(al) for al in usuario.albumes]
 
 class VistaAlbum(Resource):
 

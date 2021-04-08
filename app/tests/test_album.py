@@ -16,6 +16,7 @@ class test_album(unittest.TestCase):
         with self.app.app_context():
             # Crea las tablas de la base de datos
             db.create_all()
+            self.client.post('/login', data=json.dumps(dict(nombre='user', contrasena='12345')), content_type='application/json')
 
     def tearDown(self):
         with self.app.app_context():
@@ -24,7 +25,7 @@ class test_album(unittest.TestCase):
             db.drop_all()
 
     def test_crear_album(self):
-        res = self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        res = self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
        
         with self.app.app_context():
             self.assertEqual(len(Album.query.all()), 1)
@@ -32,9 +33,9 @@ class test_album(unittest.TestCase):
             self.assertIsNotNone(album_agregado)
             
     def test_ver_albumes(self):
-        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
-        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CASETE')), content_type='application/json')
-        res = self.client.get('/albumes')
+        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba1', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba2', anio='1999', descripcion='na', medio='CASETE')), content_type='application/json')
+        res = self.client.get('/usuario/1/albumes')
 
         with self.app.app_context():
             self.assertEqual(len(json.loads(res.data)), 2)
@@ -45,7 +46,7 @@ class test_album(unittest.TestCase):
             self.assertEqual(res.status_code, 404)
 
     def test_ver_album_existente(self):
-        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
         res = self.client.get('/album/1')
         album = json.loads(res.data)
         with self.app.app_context():
@@ -55,7 +56,7 @@ class test_album(unittest.TestCase):
             self.assertEqual(album["medio"]['llave'], 'CD')
 
     def test_editar_album(self):
-        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
         self.client.put('/album/1', data=json.dumps(dict(titulo='prueba2', anio='2000', descripcion='blablabla', medio='CASETE')), content_type='application/json')
         res = self.client.get('/album/1')
         album = json.loads(res.data)
@@ -66,11 +67,12 @@ class test_album(unittest.TestCase):
             self.assertEqual(album["medio"]['llave'], 'CASETE')
 
     def test_eliminar_album(self):
-        self.client.post('/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
+        self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
         self.client.delete('/album/1')
         res = self.client.get('/album/1')
         with self.app.app_context():
             self.assertEqual(res.status_code, 404)
+    
     
     
 

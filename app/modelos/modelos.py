@@ -24,7 +24,7 @@ class Cancion(db.Model):
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(128))
+    titulo = db.Column(db.String(128), unique=True)
     anio = db.Column(db.Integer)
     descripcion = db.Column(db.String(512))
     medio = db.Column(db.Enum(Medio))
@@ -36,6 +36,7 @@ class Usuario(db.Model):
     nombre = db.Column(db.String(50))
     contrasena = db.Column(db.String(50))
     albumes = db.relationship('Album', cascade='all, delete, delete-orphan')
+
 
 class EnumADiccionario(fields.Field):
     def _serialize(self, value, attr, obj, **kwargs):
