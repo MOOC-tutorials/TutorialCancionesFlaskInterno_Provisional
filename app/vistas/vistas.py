@@ -13,7 +13,6 @@ class VistaAlbums(Resource):
         nuevo_album = Album(titulo=request.json["titulo"], anio=request.json["anio"], descripcion=request.json["descripcion"], medio=request.json["medio"])
         usuario = Usuario.query.get_or_404(id_usuario)
         usuario.albumes.append(nuevo_album)
-        
         try:
             db.session.commit()
         except IntegrityError:
@@ -30,6 +29,11 @@ class VistaAlbum(Resource):
 
     def get(self, id_album):
         return album_schema.dump(Album.query.get_or_404(id_album))
+
+    def post(self, id_album)
+        nuevo_album = Album(titulo=request.json["titulo"], anio=request.json["anio"], descripcion=request.json["descripcion"], medio=request.json["medio"])
+        usuario = Usuario.query.get_or_404(id_usuario)
+        usuario.albumes.append(nuevo_album)
 
     def put(self, id_album):
         album = Album.query.get_or_404(id_album)
@@ -88,7 +92,19 @@ class VistaCanciones(Resource):
         else:
             return [cancion_schema.dump(ca) for ca in Cancion.query.filter(
                 Cancion.titulo.ilike('%{0}%'.format(args["nombre"])))]
-        
+
+class VistaCancionesAlbum(Resource):
+
+    def post(self, id_album):
+        album = Album.query.get_or_404(id_album)
+        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
+        album.canciones.append(nueva_cancion)
+        db.session.commit()
+        return cancion_schema.dump(nueva_cancion)
+       
+    def get(self, id_album):
+        album = Album.query.get_or_404(id_album)
+        return [canciones_schema.dump(ca) for ca in album.canciones]
 
 class VistaCancion(Resource):
 
