@@ -24,19 +24,21 @@ class Cancion(db.Model):
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(128), unique=True)
+    titulo = db.Column(db.String(128))
     anio = db.Column(db.Integer)
     descripcion = db.Column(db.String(512))
     medio = db.Column(db.Enum(Medio))
     usuario = db.Column(db.Integer, db.ForeignKey("usuario.id"))
     canciones = db.relationship('Cancion', secondary = 'album_cancion')
+    __table_args__ = (db.UniqueConstraint('usuario', 'titulo', name='titulo_unico_album'),)
+   
 
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True, unique=True)
     nombre = db.Column(db.String(50))
     contrasena = db.Column(db.String(50))
     albumes = db.relationship('Album', cascade='all, delete, delete-orphan')
-
+    
 
 class EnumADiccionario(fields.Field):
     def _serialize(self, value, attr, obj, **kwargs):

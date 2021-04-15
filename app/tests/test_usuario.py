@@ -66,6 +66,6 @@ class test_usuario(unittest.TestCase):
         res = self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='1999', descripcion='na', medio='CD')), content_type='application/json')
         res = self.client.post('/usuario/1/albumes', data=json.dumps(dict(titulo='prueba', anio='2000', descripcion='na', medio='CD')), content_type='application/json')
         with self.app.app_context():
-            self.assertEqual(len(Album.query.all()), 1)
+            self.assertEqual(len(Album.query.all()), 2)
             album_agregado = Album.query.filter(Album.titulo == "prueba").first()
             self.assertIsNotNone(album_agregado)

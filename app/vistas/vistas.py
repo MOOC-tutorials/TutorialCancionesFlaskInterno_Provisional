@@ -30,7 +30,7 @@ class VistaAlbum(Resource):
     def get(self, id_album):
         return album_schema.dump(Album.query.get_or_404(id_album))
 
-    def post(self, id_album)
+    def post(self, id_album):
         nuevo_album = Album(titulo=request.json["titulo"], anio=request.json["anio"], descripcion=request.json["descripcion"], medio=request.json["medio"])
         usuario = Usuario.query.get_or_404(id_usuario)
         usuario.albumes.append(nuevo_album)
