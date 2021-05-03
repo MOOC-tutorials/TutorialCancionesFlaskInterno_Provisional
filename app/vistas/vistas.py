@@ -1,7 +1,10 @@
-from flask import request
-from modelos.modelos import db, Album, Medio, AlbumSchema, Usuario, UsuarioSchema, Cancion, CancionSchema
+from flask import request, current_app
+from modelos.modelos import Album, Medio, AlbumSchema, Usuario, UsuarioSchema, Cancion, CancionSchema
 from flask_restful import Resource, reqparse
 from sqlalchemy.exc import IntegrityError
+from time import sleep
+from app import api, db
+from tareas.tareas import registrar_cancion
 
 album_schema = AlbumSchema()
 usuario_schema = UsuarioSchema()
@@ -95,16 +98,17 @@ class VistaCanciones(Resource):
 
 class VistaCancionesAlbum(Resource):
 
+
     def post(self, id_album):
-        album = Album.query.get_or_404(id_album)
-        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
-        album.canciones.append(nueva_cancion)
-        db.session.commit()
-        return cancion_schema.dump(nueva_cancion)
+            app = current_app._get_current_object()
+            registrar_cancion.delay(id_album, request.json)
+            return '',204
+        
+
        
     def get(self, id_album):
         album = Album.query.get_or_404(id_album)
-        return [canciones_schema.dump(ca) for ca in album.canciones]
+        return [cancion_schema.dump(ca) for ca in album.canciones]
 
 class VistaCancion(Resource):
 
@@ -126,3 +130,10 @@ class VistaCancion(Resource):
         db.session.commit()
         return '',204
 
+api.add_resource(VistaAlbums, '/usuario/<int:id_usuario>/albumes')
+api.add_resource(VistaAlbum, '/album/<int:id_album>')
+api.add_resource(VistaCancionesAlbum, '/album/<int:id_album>/canciones')
+api.add_resource(VistaLogin, '/login')
+api.add_resource(VistaUsuario, '/usuario/<int:id_usuario>')
+api.add_resource(VistaCanciones, '/canciones')
+api.add_resource(VistaCancion, '/cancion/<int:id_cancion>')

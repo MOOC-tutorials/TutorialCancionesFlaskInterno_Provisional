@@ -2,13 +2,12 @@ from flask_sqlalchemy import SQLAlchemy
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields
 import enum
+from app import db
 
 class Medio(enum.Enum):
    DISCO = 1
    CASETE = 2
    CD = 3
-
-db = SQLAlchemy()
 
 albumes_canciones = db.Table('album_cancion',
     db.Column('album_id', db.Integer, db.ForeignKey('album.id'), primary_key = True),
