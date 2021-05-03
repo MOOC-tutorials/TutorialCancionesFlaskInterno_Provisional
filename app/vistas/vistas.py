@@ -104,7 +104,6 @@ class VistaCancionesAlbum(Resource):
             registrar_cancion.delay(id_album, request.json)
             return '',204
         
-
        
     def get(self, id_album):
         album = Album.query.get_or_404(id_album)
