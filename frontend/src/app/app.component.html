@@ -1,0 +1,40 @@
+<app-barra></app-barra>
+<h1>
+  {{title}}
+</h1>
+
+<form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+
+  <div>
+    <label for="titulo">
+      Título
+    </label>
+    <input id="titulo" type="text" formControlName="titulo">
+
+  <button class="button" type="submit">Buscar</button>
+  </div>
+
+</form>
+
+<br>
+
+<table class="mi_tabla">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Duración</th>
+      <th>Intérprete</th>
+  </tr>
+  </thead>
+  <tbody>
+
+        <tr *ngFor="let c of canciones">
+        <td>{{c.titulo}}</td>
+        <td>{{c.minutos}}:{{c.segundos}}</td>
+        <td>{{c.interprete}}</td>
+        </tr>
+
+  </tbody>
+</table>
+
+

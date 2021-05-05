@@ -2,12 +2,17 @@ from modelos.modelos import db
 from flask import Flask
 from flask_restful import Api
 from vistas.vistas import *
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 db.init_app(app)
 api = Api(app)
+cors = CORS(app)
+
+
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 api.add_resource(VistaAlbums, '/usuario/<int:id_usuario>/albumes')
 api.add_resource(VistaAlbum, '/album/<int:id_album>')
