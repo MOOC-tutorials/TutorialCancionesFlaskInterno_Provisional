@@ -9,7 +9,7 @@ cancion_schema = CancionSchema()
 
 app = Celery('tasks', broker='redis://localhost:6379/0')
 
-@app.task
+@app.task(name="tabla.registrar")
 def registrar_puntaje(cancion_json):
     cancion = Cancion.query.get(cancion_json["id"])
     if cancion is None:
