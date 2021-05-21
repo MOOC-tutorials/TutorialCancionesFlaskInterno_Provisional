@@ -23,9 +23,7 @@ class VistaPuntuacion(Resource):
         cancion = content.json()
         cancion["puntaje"] = request.json["puntaje"]
         cancion["review"] = request.json["review"]
-        #data = urllib.parse.urlencode(cancion).encode()
         print(json.dumps(cancion))
-        #req = requests.post('http://127.0.0.1:5002/tablaPuntajes/registrarPuntaje', json=cancion)
         args = (cancion,)
         registrar_puntaje.apply_async(args, queue='tabla', serializer='json')
         
